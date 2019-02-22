@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  namespace: secrets-sandbox
+spec:
+  containers:
+  - image: nginx
+    name: azure-pod
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    volumeMounts:
+    - name: secret-azure
+      mountPath: "/etc/mark-secrets"
+      readOnly: true
+    env:
+      - name: SECRET_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: azure-sa-secret
+            key: username
+      - name: SECRET_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: azure-sa-secret
+            key: password  
+  volumes:
+  - name: secret-azure
+    secret:
+      secretName: azure-sa-secret
+  serviceAccountName: azure-sa

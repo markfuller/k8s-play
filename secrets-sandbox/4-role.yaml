@@ -1,0 +1,15 @@
+# consider a cluster role here which is a role that can span namespaces and be bound to a single one
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: secrets-sandbox
+  name: pod-reader
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  resourceNames:
+    - azure-sa-secret
+  verbs: ["get"]  
