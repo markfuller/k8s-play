@@ -31,13 +31,22 @@ Using the local docker registry (on the host machine)
 
 ```sh
 eval $(minikube docker-env)
-docker build -t lyraproj/nodejs .
+docker build -t lyraproj/customer customer-service
+docker build -t lyraproj/address address-service
 # we could do this sort of thing
 # kubectl run lyra-dep --image=lyraproj/nodejs --image-pull-policy=Never
 #
-# but actually we have namespace, pod and service files ready to go
+# but actually we have namespace, deployment (incl. pod) and service files ready to go
 kubectl apply -f local-docker-reg
-# easiest way to test (should really be doing this from outside the cluster - and outside the service)
-kubectl exec --namespace local-docker-registry-test -it hello-node-js -- /bin/bash
+# one way to test (should really be doing this from outside the cluster - and outside the service)
+kubectl exec --namespace local-docker-registry-test -it hello-node-js /bin/bash
+# to get pod_name for deployment
+export pod_name=$(kubectl --namespace local-docker-registry-test get pods | grep myappdeployment | head -1 | awk {'print $1'})
+kubectl exec --namespace local-docker-registry-test -it $pod_name /bin/bash
 curl 127.0.0.1:8080
+# but with the deployment we can get on nicely using the node port 
+# hit the address
+curl http://$(minikube ip):30001 
+# hit the customer which relies on the address
+curl http://$(minikube ip):30002
 ```

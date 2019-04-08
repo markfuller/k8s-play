@@ -1,0 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: my-service
+  namespace: local-docker-registry-test
+spec:
+  selector:
+    app: customer-api
+  ports:
+  - protocol: TCP
+    # inside the cluster port
+    port: 80
+    # the port on the pod that is serving
+    targetPort: 8080
+    # externally facing port
+    nodePort: 30002
+  type: NodePort

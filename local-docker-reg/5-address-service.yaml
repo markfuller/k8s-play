@@ -1,0 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: my-address-service
+  namespace: local-docker-registry-test
+spec:
+  selector:
+    app: address-api
+  ports:
+  - protocol: TCP
+    # inside the cluster port
+    port: 8000
+    # the port on the pod that is serving
+    targetPort: 8081
+    # externally facing port
+    nodePort: 30003
+  type: NodePort

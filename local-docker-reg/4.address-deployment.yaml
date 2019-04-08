@@ -1,0 +1,31 @@
+kind: Deployment
+apiVersion: apps/v1beta1
+metadata:
+  namespace: local-docker-registry-test
+  labels:
+    app: address-api
+  name: address-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: address-api
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: address-api
+    spec:
+      containers:
+      - image: lyraproj/address
+        imagePullPolicy: Never
+        name: address-api
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"          
+        ports:
+        - containerPort: 8081
