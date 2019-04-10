@@ -2,7 +2,7 @@
 var http = require('http');
 
 var handleRequest = function(request, response) {
-  console.log('Received request for URL: ' + request.url);
+  console.log('Address service received request for URL: ' + request.url);
   response.writeHead(200);
   response.end('29 Acacia Road\n');
 };

@@ -4,7 +4,7 @@ metadata:
   namespace: local-docker-registry-test
   labels:
     app: customer-api
-  name: myappdeployment
+  name: customer-deployment
 spec:
   replicas: 1
   selector:
@@ -29,3 +29,6 @@ spec:
             cpu: "500m"          
         ports:
         - containerPort: 8080
+        env:
+          - name: ADDRESS_URI
+            value: http://my-address-service.local-docker-registry-test:8000

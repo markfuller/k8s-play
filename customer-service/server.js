@@ -1,18 +1,20 @@
 var http = require('http');
 
 var handleRequest = function (request, response) {
-  console.log('Received request for URL: ' + request.url);
+  console.log('Customer service received request for URL: ' + request.url);
   response.writeHead(200);
-
-  //TODO this address and port should not be hardcoded
+  
+  let addressUri = process.env.ADDRESS_URI
   // http.get('http://localhost:8081', (resp) => {
-  http.get('http://my-address-service.local-docker-registry-test:8000', (resp) => {
+  // http.get('http://my-address-service.local-docker-registry-test:8000', (resp) => {
+  console.log('Contacting address service at URI: ' + addressUri);
+  http.get(addressUri, (resp) => {
     let data = ''
     resp.on('data', (chunk) => {
       data += chunk;
     });
     resp.on('end', () => {
-      console.log("data is " + data);
+      console.log("address data is " + data);
       response.end("Customer Eric at address " + data + ".\n")
     });
   }).on("error", (err) => {

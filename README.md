@@ -33,6 +33,8 @@ Using the local docker registry (on the host machine)
 eval $(minikube docker-env)
 docker build -t lyraproj/customer customer-service
 docker build -t lyraproj/address address-service
+#docker build -t lyraproj/customer customer-service && docker build -t lyraproj/address address-service
+
 # we could do this sort of thing
 # kubectl run lyra-dep --image=lyraproj/nodejs --image-pull-policy=Never
 #
@@ -41,12 +43,14 @@ kubectl apply -f local-docker-reg
 # one way to test (should really be doing this from outside the cluster - and outside the service)
 kubectl exec --namespace local-docker-registry-test -it hello-node-js /bin/bash
 # to get pod_name for deployment
-export pod_name=$(kubectl --namespace local-docker-registry-test get pods | grep myappdeployment | head -1 | awk {'print $1'})
-kubectl exec --namespace local-docker-registry-test -it $pod_name /bin/bash
+export customer_pod_name=$(kubectl --namespace local-docker-registry-test get pods | grep customer-deployment | head -1 | awk {'print $1'})
+kubectl exec --namespace local-docker-registry-test -it $customer_pod_name /bin/bash
 curl 127.0.0.1:8080
-# but with the deployment we can get on nicely using the node port 
-# hit the address
-curl http://$(minikube ip):30001 
+# but with the deployment we can get on nicely using the node port e.g hit the address
+curl http://$(minikube ip):30003
 # hit the customer which relies on the address
 curl http://$(minikube ip):30002
+# get the logs - we use the head -1 in case we have multiple replicas
+kubectl --namespace local-docker-registry-test get pods | grep address-deployment | awk '{print $1}' | head -1 | xargs kubectl --namespace local-docker-registry-test logs
+kubectl --namespace local-docker-registry-test get pods | grep customer-deployment | awk '{print $1}' | head -1 | xargs kubectl --namespace local-docker-registry-test logs
 ```
