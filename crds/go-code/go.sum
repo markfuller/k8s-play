@@ -192,6 +192,7 @@ gopkg.in/yaml.v2 v2.2.1/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
 gotest.tools v2.2.0+incompatible/go.mod h1:DsYFclhRJ6vuDpmuTbkuFWG+y2sxOXAzmJt81HFBacw=
 k8s.io/api v0.0.0-20190405172450-8fc60343b75c h1:H3lTZIwwi5RFpDu7FaNWuj/nLGx/VGJtf0lgnibxt7E=
 k8s.io/api v0.0.0-20190405172450-8fc60343b75c/go.mod h1:3Wzsx7slWzBw6GbPMeksreuwqpC7UoolhqORRc9g5XY=
+k8s.io/api v0.0.0-20190408172450-b1350b9e3bc2 h1:Do3IjNu7X/cfxuN0JH0RftexRiXSkXWeJ2K6C/eluJY=
 k8s.io/api v0.0.0-20190408172450-b1350b9e3bc2/go.mod h1:veStiK0yF1nHrr8JiIMWMFtxkvM2/N0btMIbquIFfr4=
 k8s.io/apiextensions-apiserver v0.0.0-20190408173516-34b98ea6c731 h1:NJhGkF2NBSc83u2+XJfMqkpytEFmd0bJ64Kv/AGKU/o=
 k8s.io/apiextensions-apiserver v0.0.0-20190408173516-34b98ea6c731/go.mod h1:BzGP8EjdjV7tNudfhxmM6Z/r6bo8n2JJiBlXBoYPFN0=
