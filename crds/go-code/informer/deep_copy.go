@@ -56,7 +56,7 @@ type WazzaStatus struct {
 func (in *Wazza) DeepCopyInto(out *Wazza) {
 	*out = *in
 	// out.TypeMeta = in.TypeMeta
-	// in.ObjectMeta.DeepCopyInto(&out.ObjectMeta)
+	in.ObjectMeta.DeepCopyInto(&out.ObjectMeta)
 	in.Spec.DeepCopyInto(&out.Spec)
 	out.Status = in.Status
 	return

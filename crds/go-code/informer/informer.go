@@ -28,11 +28,14 @@ import (
 )
 
 const (
-	namespaceName = "TODOnamespace"
+	namespaceName = "default"
 )
 
-func Start() {
+var plural string
+
+func Start(crdPlural string) {
 	fmt.Printf("Entered Start\n")
+	plural = crdPlural
 
 	cfg := config.GetConfigOrDie()
 	kubeClient := kubernetes.NewForConfigOrDie(cfg)
@@ -133,7 +136,7 @@ func listImpl(client kubernetes.Interface, opts metav1.ListOptions) (result runt
 	res := getRESTClient().
 		Get().
 		Namespace(namespaceName).
-		Resource("xyz").
+		Resource(plural).
 		// VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
 		Do()
@@ -151,7 +154,8 @@ func watchImpl(client kubernetes.Interface, opts metav1.ListOptions) (watch.Inte
 	return getRESTClient().
 		Get().
 		Namespace(namespaceName).
-		Resource("xyz").
+		Resource(plural).
+		Suffix("lyra.example.com").
 		// VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
 		Watch()
