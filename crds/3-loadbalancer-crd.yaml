@@ -1,0 +1,33 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: loadbalancers.lyra.example.com
+  namespace: crd-stuff
+spec:
+  group: lyra.example.com
+  names:
+    kind: LoadBalancer
+    listKind: LoadBalancerList
+    plural: loadbalancers
+    singular: loadbalancer
+    shortNames:
+    - lb
+  scope: Namespaced
+  version: v1alpha1
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      required: ["spec"]
+      properties:
+        spec:
+          required: ["LoadBalancerName"]
+          properties:
+            LoadBalancerName:
+              type: "string"
+            LoadBalancerId:
+              type: "string"
+            refreshTime:
+              type: "integer"
+              minimum: 30
+              maximum: 6000

@@ -1,0 +1,7 @@
+apiVersion: lyra.example.com/v1alpha1
+kind: WebServer
+metadata:
+  name: webserver-one
+spec:
+  WebServerName: sample2
+  refreshTime: 120
