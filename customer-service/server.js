@@ -5,8 +5,6 @@ var handleRequest = function (request, response) {
   response.writeHead(200);
   
   let addressUri = process.env.ADDRESS_URI
-  // http.get('http://localhost:8081', (resp) => {
-  // http.get('http://my-address-service.local-docker-registry-test:8000', (resp) => {
   console.log('Contacting address service at URI: ' + addressUri);
   http.get(addressUri, (resp) => {
     let data = ''

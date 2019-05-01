@@ -30,27 +30,53 @@ kubectl --namespace secrets-sandbox --as azure-sa auth can-i get secret/other-se
 Using the local docker registry (on the host machine) 
 
 ```sh
+minikube start
+minikube dashboard
+# create namespace and deploy
+kubectl create namespace testnamespace
+kubectl get namespaces
+kubectl --namespace testnamespace create deployment nginx --image=nginx 
+kubectl get deployments
+kubectl --namespace testnamespace get deployments
+kubectl delete namespace testnamespace
+# docker - two interdependent services
+eval "$(docker-machine env -u)" # undo eval minikube
+docker build -t lyraproj/customer customer-service && docker build -t lyraproj/address address-service
+docker run -t -p 8081:8081 lyraproj/address
+curl http://localhost:8081 
+docker run -t -p 8080:8080 --env ADDRESS_URI=http://host.docker.internal:8081 lyraproj/customer
+curl http://localhost:8080 
+# in k8s
 eval $(minikube docker-env)
-docker build -t lyraproj/customer customer-service
-docker build -t lyraproj/address address-service
-#docker build -t lyraproj/customer customer-service && docker build -t lyraproj/address address-service
-
-# we could do this sort of thing
-# kubectl run lyra-dep --image=lyraproj/nodejs --image-pull-policy=Never
-#
-# but actually we have namespace, deployment (incl. pod) and service files ready to go
+docker build -t lyraproj/customer customer-service && docker build -t lyraproj/address address-service
 kubectl apply -f local-docker-reg
-# one way to test (should really be doing this from outside the cluster - and outside the service)
-kubectl exec --namespace local-docker-registry-test -it hello-node-js /bin/bash
-# to get pod_name for deployment
-export customer_pod_name=$(kubectl --namespace local-docker-registry-test get pods | grep customer-deployment | head -1 | awk {'print $1'})
-kubectl exec --namespace local-docker-registry-test -it $customer_pod_name /bin/bash
-curl 127.0.0.1:8080
-# but with the deployment we can get on nicely using the node port e.g hit the address
+# export customer_pod_name=$(kubectl --namespace local-docker-registry-test get pods | grep customer-deployment | head -1 | awk {'print $1'})
+# kubectl exec --namespace local-docker-registry-test -it $customer_pod_name /bin/bash
+# curl 127.0.0.1:8080
 curl http://$(minikube ip):30003
-# hit the customer which relies on the address
 curl http://$(minikube ip):30002
-# get the logs - we use the head -1 in case we have multiple replicas
+# get logs
 kubectl --namespace local-docker-registry-test get pods | grep address-deployment | awk '{print $1}' | head -1 | xargs kubectl --namespace local-docker-registry-test logs
 kubectl --namespace local-docker-registry-test get pods | grep customer-deployment | awk '{print $1}' | head -1 | xargs kubectl --namespace local-docker-registry-test logs
+```
+
+prep
+
+```sh 
+minikube delete
+minikube start
+eval "$(docker-machine env -u)"
+docker build -t lyraproj/customer customer-service && docker build -t lyraproj/address address-service
+eval "$(minikube docker-env)"
+docker build -t lyraproj/customer customer-service && docker build -t lyraproj/address address-service
+```
+
+# Helm
+
+```sh
+brew install kubernetes-helm
+# init helm and install tiller
+helm init --history-max 200
+helm repo update              # Make sure we get the latest list of charts
+helm install stable/mysql
 ```
