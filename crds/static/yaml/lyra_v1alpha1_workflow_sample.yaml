@@ -1,0 +1,9 @@
+apiVersion: lyra.example.com/v1alpha1
+kind: Workflow
+metadata:
+  name: sample2-workflow
+spec:
+  workflowName: foobernetes
+  data:
+    foobernetes.lb_policy: rr
+  refreshTime: 120

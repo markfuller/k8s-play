@@ -2,29 +2,35 @@ package informer
 
 import (
 	"fmt"
+
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
+
 	// utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/apimachinery/pkg/util/wait"
 	kubeinformers "k8s.io/client-go/informers"
+
 	// infcorev1 "k8s.io/client-go/informers/core/v1"
 	"github.com/davecgh/go-spew/spew"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
 	internalinterfaces "k8s.io/client-go/informers/internalinterfaces"
+
 	// "k8s.io/client-go/kubernetes"
 	kubernetes "k8s.io/client-go/kubernetes"
 	cache "k8s.io/client-go/tools/cache"
+
 	// "k8s.io/client-go/tools/cache"
 	// "k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 
-	// scheme "k8s.io/sample-controller/pkg/generated/clientset/versioned/scheme"
+	scheme "k8s.io/sample-controller/pkg/generated/clientset/versioned/scheme"
+	"time"
+
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/controller-runtime/pkg/runtime/signals"
-	"time"
 )
 
 const (
@@ -75,8 +81,8 @@ func Start(crdPlural string) {
 	fmt.Printf("completed do\n")
 }
 
-var scheme = runtime.NewScheme()
-var codecs = serializer.NewCodecFactory(scheme)
+// var scheme = runtime.NewScheme()
+// var codecs = serializer.NewCodecFactory(scheme)
 
 func tweakListOptionsImpl(x *metav1.ListOptions) {}
 
@@ -103,7 +109,8 @@ func newInformer(client kubernetes.Interface, namespace string, resyncPeriod tim
 }
 func setConfigDefaults(config *rest.Config) error {
 	config.APIPath = "/apis"
-	config.NegotiatedSerializer = codecs.WithoutConversion()
+	// config.NegotiatedSerializer = codecs.WithoutConversion()
+	config.NegotiatedSerializer = serializer.DirectCodecFactory{CodecFactory: scheme.Codecs}
 
 	if config.UserAgent == "" {
 		config.UserAgent = rest.DefaultKubernetesUserAgent()
